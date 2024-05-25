@@ -4,26 +4,22 @@ import Home from './pages/home';
 import Auth from './pages/Auth';
 import Signup from './pages/signup';
 
-async function fetchData() {
-  const response = await fetch('http://localhost:3211');
-  const blogs = await response.json();
-  return blogs.getBlog.data
-}
+// async function fetchData() {
+//   const response = await fetch('http://localhost:3211');
+//   const blogs = await response.json();
+//   return blogs.getBlog.data
+// }
 
 const App: React.FC = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetchData().then((data) => {
-      setData(data);
-    });
-  }, []);
-
+  const [token, setToken] = useState('')
+  function tokenHandle(a:string) {
+    setToken(a)
+  }
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home/>} />
-        <Route path="/Auth" element={<Auth />} />
+        <Route path="/Auth" element={<Auth setToken={tokenHandle}/>} />
         <Route path="/Signup" element={<Signup />} />
       </Routes>
     </Router>

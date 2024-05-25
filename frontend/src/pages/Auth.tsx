@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Auth: React.FC = () => {
+interface User {
+    email:string;
+    password:string;
+    token:string;
+}
+interface AuthProps {
+    setToken: (token:string) => void
+}
+const Auth: React.FC<AuthProps> = ({ setToken }) => {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [users, setUsers] = useState<User[]>([]);
+
+    useEffect(() => {
+        fetchingData().then((data) => {
+            setUsers(data);
+        });
+    }, []);
 
     function signup() {
         navigate("/signup");
@@ -25,14 +40,21 @@ const Auth: React.FC = () => {
         if (validate(email, password)) {
             setError("");
             // Perform sign-in logic here
-            console.log("Email and Password are valid." + email + password);
+            for (let i in users) {
+                if (users[i].email === email && users[i].password === password) {
+                    setToken(users[i].token);
+                    navigate("/")
+                } else {
+                    setError("Email not registered yet or password is incorrect");
+                }
+            }
         } else {
             setError("Please enter a valid email and password must be at least 6 characters long.");
         }
     }
 
     return (
-        <div className="my-20 mx-auto bg-gray-2 flex max-w-sm w-max gap-6 flex-col border-2 border-gray-4 rounded-lg p-5">
+        <div className="my-20 mx-auto bg-backgroundSecondary flex max-w-sm w-max gap-6 flex-col border-2 border-border rounded-lg p-5">
             <div className="flex flex-col gap-2 items-center">
                 <h1 className="text-3xl font-semibold">Sign In</h1>
                 <h2 className="text-sm">
@@ -81,3 +103,9 @@ const Auth: React.FC = () => {
 };
 
 export default Auth;
+
+async function fetchingData() {
+    const response = await fetch('http://localhost:3211/login');
+    const users = await response.json();
+    return users.data
+}
