@@ -69,21 +69,23 @@ const Forum: React.FC<ForumProps> = ({ title, token, mainContent, username, id, 
     }, []);
 
     useEffect(() => {
-        for (let i in users) {
-            if (users[i].token === token) {
+        if (users && blog) {
+            for (let i in users) {
+              if (users[i]?.token === token) {
                 for (let s in blog) {
-                    if (blog[s].id === id) {
-                        let like = blog[s].rating.like;
-                        let dislike = blog[s].rating.dislike;
-                        setLikeValue(like.length);
-                        setDislikeValue(dislike.length);
-                        setLikeButton(like.includes(users[i].username));
-                        setDislikeButton(dislike.includes(users[i].username));
-                        console.log(users[i].username);
-                    }
+                  if (blog[s]?.id === id) {
+                    let like = blog[s]?.rating?.like || [];
+                    let dislike = blog[s]?.rating?.dislike || [];
+                    setLikeValue(like.length);
+                    setDislikeValue(dislike.length);
+                    setLikeButton(like.includes(users[i]?.username));
+                    setDislikeButton(dislike.includes(users[i]?.username));
+                    console.log(users[i]?.username);
+                  }
                 }
+              }
             }
-        }
+          }
     }, [blog]);
 
     useEffect(() => {

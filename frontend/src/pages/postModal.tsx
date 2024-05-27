@@ -34,7 +34,7 @@ const PostModal: React.FC<postModalProps> = ({ token }) => {
             setError('Please sign in')
             return;
         }
-        let like = {
+        let rating = {
             "like":[],
             "dislike": []
         }
@@ -43,7 +43,7 @@ const PostModal: React.FC<postModalProps> = ({ token }) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ title, content, like })
+            body: JSON.stringify({ title, content, rating })
         });
 
         // Reset form setelah submit
