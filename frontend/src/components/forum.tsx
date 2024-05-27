@@ -22,7 +22,7 @@ interface User {
     token: string
 }
 
-const Forum: React.FC<ForumProps> = ({ title, token, mainContent, username, id, setFilteredData }) => {
+const Forum: React.FC<ForumProps> = ({ title, token, mainContent, username, id }) => {
     const [blog, setBlog] = useState<RatingType[]>([]);
     const [users, setUsers] = useState<User[]>([]);
     const [likeButton, setLikeButton] = useState(false);

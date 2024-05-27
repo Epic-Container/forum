@@ -26,12 +26,15 @@ const PostModal: React.FC<postModalProps> = ({ token }) => {
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        if (!validate(title, content)) setError('Please fill in all fields')
         event.preventDefault();
         // Logika untuk mengirim data ke backend atau memprosesnya
         setError('')
         if (!token || token.length === 0) {
             setError('Please sign in')
+            return;
+        }
+        if (!validate(title, content)) {
+            setError('Please fill in all fields')
             return;
         }
         let rating = {
