@@ -43,7 +43,7 @@ const Auth: React.FC<AuthProps> = ({ setToken }) => {
             for (let i in users) {
                 if (users[i].email === email && users[i].password === password) {
                     setToken(users[i].token);
-                    navigate("/")
+                    navigate("/Home")
                 } else {
                     setError("Email not registered yet or password is incorrect");
                 }

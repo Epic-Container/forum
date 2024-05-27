@@ -1,11 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+interface Users {
+    email:string,
+    password:string,
+    username:string,
+}
 const Signup: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState('')
     const [error, setError] = useState("");
+    const [users, setUsers] = useState<Users[]>([]);
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        fetchingData().then((data)=>{
+            setUsers(data)
+        })
+    }, [])
 
     function validate(email: string, password: string) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,6 +36,16 @@ const Signup: React.FC = () => {
             setError("");
             // Perform sign-in logic here
             try {
+                for (let i in users) {
+                    if (users[i].email === email) {
+                        setError("Email already exists. Please sign in.");
+                        return;
+                    }
+                    if (users[i].username === username) {
+                        setError("Username already exists. Please choose a different username.");
+                        return
+                    }
+                }
                 await fetch("http://localhost:3211/signup", {
                     method: "POST",
                     headers: {
@@ -30,6 +53,7 @@ const Signup: React.FC = () => {
                     },
                     body: JSON.stringify({ email, password, token: generateRandomString(), username })
                 });
+                navigate("/")
             } catch (error) {
                 setError("An error occurred. Please try again later.");
             }
@@ -42,7 +66,7 @@ const Signup: React.FC = () => {
         <div className="my-20 mx-auto bg-backgroundSecondary flex max-w-sm w-max gap-6 flex-col border-2 border-border rounded-lg p-5">
             <div className="flex flex-col gap-2 items-center">
                 <h1 className="text-3xl font-semibold">Sign Up</h1>
-                <h2 className="text-sm">Make an Account here</h2>
+                <h2 className="text-sm">Make an Account here or <button className="text-primary underline" onClick={() => navigate("/")}>sign in</button></h2>
             </div>
             <form className="form-group" onSubmit={handleSubmit}>
             <div className="form-field">
@@ -92,6 +116,11 @@ const Signup: React.FC = () => {
         </div>
     );
 };
+async function fetchingData() {
+    const response = await fetch('http://localhost:3211/login');
+    const users = await response.json();
+    return users.data
+}
 
 function generateRandomString() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

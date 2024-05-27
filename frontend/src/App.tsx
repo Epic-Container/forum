@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/home';
 import Auth from './pages/Auth';
 import Signup from './pages/signup';
-
+import PostModal from './pages/postModal';
 // async function fetchData() {
 //   const response = await fetch('http://localhost:3211');
 //   const blogs = await response.json();
@@ -18,9 +18,10 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/Auth" element={<Auth setToken={tokenHandle}/>} />
+        <Route path="/Home" element={<Home token={ token }/>} />
+        <Route path="/" element={<Auth setToken={tokenHandle}/>} />
         <Route path="/Signup" element={<Signup />} />
+        <Route path="/Post" element={<PostModal token={token}/>}/>
       </Routes>
     </Router>
   );
