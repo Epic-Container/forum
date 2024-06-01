@@ -15,7 +15,7 @@ const dataBase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
 
 app.post('/post/:token', async (req, res) => {
     const { token } = req.params;
-    const { title, content, like } = req.body;
+    const { title, content, rating } = req.body;
     const getUser = await dataBase.from("User").select();
     let username = ''
     for (let i in getUser.data) {
@@ -24,7 +24,7 @@ app.post('/post/:token', async (req, res) => {
         }
     }
     console.log( title, token, content, username)
-    const insertBlog = await dataBase.from("Blog").insert({ title, content, username, like });
+    const insertBlog = await dataBase.from("Blog").insert({ title, content, username, rating });
     res.json({ insertBlog })
 })
 app.post('/like/:token', async (req, res) => {
@@ -44,6 +44,7 @@ app.post('/like/:token', async (req, res) => {
             rating = getBlog.data[i].rating
         }
     }
+    console.log(rating)
     if (likeButton) {
         // Hapus username dari array dislike jika ada
         if (rating.dislike.includes(username)) {
